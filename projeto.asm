@@ -7,7 +7,7 @@
 	
 	; R1 - linha do boneco
 	; R2 - coluna do boneco
-	;
+	; R7 - diraçao ig
 	
 	
 	
@@ -86,8 +86,14 @@ espera_tecla:                 ; neste ciclo espera - se até uma tecla ser premi
 	CALL teclado                 ; leitura às teclas
 	CMP R0, 0                    ; se diferente de 0 vai dizer a coluna ( entre 1 e 8)
 	JZ espera_tecla              ; espera, enquanto não houver tecla
-	CALL coluna_1248_to_0123     ; converte R0
-	CALL linha_1248_to_0123      ; converte R6
+
+	MOV R5, R6
+	CALL converte_1248_to_0123
+	MOV R6, R8
+
+	MOV R5, R0
+	CALL converte_1248_to_0123
+	MOV R0, R8
 	
 	ADD R6, R6                   ; R6 = 2 * R6
 	ADD R6, R6                   ; R6 = 2 * R6 <=> R6 = 4 * R6
@@ -265,43 +271,21 @@ teclado:
 	RET
 	
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-	; linha_1248_to_0123 - Converte o valor da linha do teclado para um inteiro entre 0 e 3
-	; Argumentos: R6 - linha pressionada (em formato 1, 2, 4 ou 8)
+	; converte_1248_to_0123 - Converte o valor entre (1, 2, 4 ou 8) para um valor entre (0, 1, 2, 3)
+	; Argumentos: R5 - valor (em formato 1, 2, 4 ou 8)
 	;
-	; Retorna: R6 - linha pressionada (0, 1, 2, 3)
+	; Retorna: R8 - valor (em formato 0, 1, 2, 3)
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-linha_1248_to_0123:
+converte_1248_to_0123:
 	PUSH R5
-	MOV R5, R6
-	MOV R6, - 1                  ; R6 vai ser o indicador da linha
-ciclo_linha_1248_to_0123:
+	MOV R8, - 1
 	CMP R5, 0
-	JZ fim_linha_1248_to_0123
+	JZ fim_1248_to_0123
+ciclo_1248_to_0123:
 	SHR R5, 1
-	ADD R6, 1
-	JMP ciclo_linha_1248_to_0123
-fim_linha_1248_to_0123:
+	ADD R8, 1                    ; incrementa o contador
+	CMP R5, 0
+	JNZ ciclo_1248_to_0123       ; repete o ciclo enquanto R5 =/= 0
+fim_1248_to_0123:
 	POP R5
 	RET
-	
-	
-	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-	; coluna_1248_to_0123 - Converte o valor da coluna do teclado para um inteiro entre 0 e 3
-	; Argumentos: R0 - coluna pressionada (em formato 1, 2, 4 ou 8)
-	;
-	; Retorna: R0 - coluna pressionada (0, 1, 2, 3)
-	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-coluna_1248_to_0123:
-	PUSH R5
-	MOV R5, R0                   ; valor que vai rodar
-	MOV R0, - 1                  ; R0 vai ser o indicador da coluna
-ciclo_coluna_1248_to_0123:
-	CMP R5, 0
-	JZ fim_coluna_1248_to_0123
-	SHR R5, 1
-	ADD R0, 1                    ; incrementa o contador
-	JMP ciclo_coluna_1248_to_0123
-fim_coluna_1248_to_0123:
-	POP R5
-	RET
-
