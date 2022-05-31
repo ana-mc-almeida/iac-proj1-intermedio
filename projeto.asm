@@ -17,16 +17,17 @@
 	TEC_LIN EQU 0C000H           ; endereço das linhas do teclado (periférico POUT - 2)
 	TEC_COL EQU 0E000H           ; endereço das colunas do teclado (periférico PIN)
 	LINHA_TECLADO EQU 16         ; linha a testar (4ª linha, 1000b)
-	MASCARA_1 EQU 0FH            ; para isolar os 4 bits de menor peso, ao ler as colunas do teclado
-	MASCARA_2 EQU 0F0H           ; para isolar os 4 bits de maior peso, ao ler as colunas do teclado
-	TECLA_ESQUERDA EQU 0CH         ; tecla na primeira coluna do teclado (tecla C)
-	TECLA_DIREITA EQU 0DH          ; tecla na segunda coluna do teclado (tecla D)
+	MASCARA EQU 0FH              ; para isolar os 4 bits de menor peso, ao ler as colunas do teclado
+	
+	; teclas com funções
+	TECLA_00 EQU 00H             ; tecla na primeira coluna do teclado (tecla 0)
+	TECLA_02 EQU 02H             ; tecla na segunda coluna do teclado (tecla 2)
 	
 	DEFINE_LINHA EQU 600AH       ; endereço do comando para definir a linha
 	DEFINE_COLUNA EQU 600CH      ; endereço do comando para definir a coluna
 	DEFINE_PIXEL EQU 6012H       ; endereço do comando para escrever um pixel
 	APAGA_AVISO EQU 6040H        ; endereço do comando para apagar o aviso de nenhum cenário selecionado
-	APAGA_ECRÃ EQU 6002H         ; endereço do comando para apagar todos os pixels já desenhados
+	APAGA_ECRA EQU 6002H         ; endereço do comando para apagar todos os pixels já desenhados
 	SELECIONA_CENARIO_FUNDO EQU 6042H ; endereço do comando para selecionar uma imagem de fundo
 	
 	LINHA EQU 16                 ; linha do boneco (a meio do ecrã))
@@ -64,7 +65,7 @@ inicio:
 	; à última da pilha
 	
 	MOV [APAGA_AVISO], R1        ; apaga o aviso de nenhum cenário selecionado (o valor de R1 não é relevante)
-	MOV [APAGA_ECRÃ], R1         ; apaga todos os pixels já desenhados (o valor de R1 não é relevante)
+	MOV [APAGA_ECRA], R1         ; apaga todos os pixels já desenhados (o valor de R1 não é relevante)
 	MOV R1, 0                    ; cenário de fundo número 0
 	MOV [SELECIONA_CENARIO_FUNDO], R1 ; seleciona o cenário de fundo
 	MOV R7, 1                    ; valor a somar à coluna do boneco, para o movimentar
@@ -83,27 +84,30 @@ espera_tecla:                 ; neste ciclo espera - se até uma tecla ser premi
 	SHR R6, 1                    ; dividir por 2
 	JZ inicia_linhas             ; se for 0 volta ao "inicio" das linhas
 	CALL teclado                 ; leitura às teclas
-	CMP R0, 0
+	CMP R0, 0                    ; se diferente de 0 vai dizer a coluna ( entre 1 e 8)
 	JZ espera_tecla              ; espera, enquanto não houver tecla
-	CALL coluna_1248_to_0123
-	;SHL R6, 4
-	CALL linha_1248_to_0123
-	ADD R6, R6					; R6 = 2 * R6
-	ADD R6, R6					; R6 = 2 * R6  <=> R6 = 4 * R6
-	ADD R0, R6
-	MOV R6, TECLA_ESQUERDA
+	CALL coluna_1248_to_0123     ; converte R0
+	CALL linha_1248_to_0123      ; converte R6
+	
+	ADD R6, R6                   ; R6 = 2 * R6
+	ADD R6, R6                   ; R6 = 2 * R6 <=> R6 = 4 * R6
+	ADD R0, R6                   ; R0 = 4 * R6 + R0 - > exata tecla pressionada
+	
+	MOV R6, TECLA_00
 	CMP R0, R6
-	JNZ testa_direita
+	JZ testa_esquerda
+	
+	MOV R6, TECLA_02
+	CMP R0, R6
+	JZ testa_direita
+	
+testa_esquerda:
 	MOV R7, - 1                  ; vai deslocar para a esquerda
 	JMP ve_limites
 	
-linha1:
-	
 testa_direita:
-	MOV R6, TECLA_DIREITA
-	CMP R0, R6
-	JNZ espera_tecla             ; tecla que não interessa
 	MOV R7, + 1                  ; vai deslocar para a direita
+	;JMP ve_limites ;linha desnecessária porque a rotina vem mesmo a seguir
 	
 ve_limites:
 	MOV R6, [R4]                 ; obtém a largura do boneco
@@ -251,7 +255,7 @@ teclado:
 	PUSH R5
 	MOV R2, TEC_LIN              ; endereço do periférico das linhas
 	MOV R3, TEC_COL              ; endereço do periférico das colunas
-	MOV R5, MASCARA_1            ; para isolar os 4 bits de menor peso, ao ler as colunas do teclado
+	MOV R5, MASCARA              ; para isolar os 4 bits de menor peso, ao ler as colunas do teclado
 	MOVB [R2], R6                ; escrever no periférico de saída (linhas)
 	MOVB R0, [R3]                ; ler do periférico de entrada (colunas)
 	AND R0, R5                   ; elimina bits para além dos bits 0 - 3
@@ -260,55 +264,44 @@ teclado:
 	POP R2
 	RET
 	
-converte:
-	PUSH R5
-	PUSH R6
-	MOV R5, MASCARA_1            ; para isolar os 4 bits de menor peso, ao ler as colunas do teclado
-	AND R5, R0                   ; coluna
-	SHR R5, 1		; para começar em 0 e não em 1 
-	;MOV R6, MASCARA_2            ; para isolar os 4 bits de maior peso, ao ler as colunas do teclado
-	SHR R0, 4                   
-	MOV R6, R0 					; linha
-	MOV R0, 0
-
-	ADD R6, R6					; R6 = 2 * R6
-	ADD R6, R6					; R6 = 2 * R6  <=> R6 = 4 * R6
-
-	ADD R0, R6
-	ADD R0, R5
-
-	POP R6
-	POP R5
-	RET
-
-
+	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+	; linha_1248_to_0123 - Converte o valor da linha do teclado para um inteiro entre 0 e 3
+	; Argumentos: R6 - linha pressionada (em formato 1, 2, 4 ou 8)
+	;
+	; Retorna: R6 - linha pressionada (0, 1, 2, 3)
+	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 linha_1248_to_0123:
-	PUSH R0
-	MOV R0, R6
-	MOV R6, -1
+	PUSH R5
+	MOV R5, R6
+	MOV R6, - 1                  ; R6 vai ser o indicador da linha
 ciclo_linha_1248_to_0123:
-	CMP R0, 0
+	CMP R5, 0
 	JZ fim_linha_1248_to_0123
-	SHR R0, 1
+	SHR R5, 1
 	ADD R6, 1
 	JMP ciclo_linha_1248_to_0123
 fim_linha_1248_to_0123:
-	POP R0
+	POP R5
 	RET
 	
-
+	
+	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+	; coluna_1248_to_0123 - Converte o valor da coluna do teclado para um inteiro entre 0 e 3
+	; Argumentos: R0 - coluna pressionada (em formato 1, 2, 4 ou 8)
+	;
+	; Retorna: R0 - coluna pressionada (0, 1, 2, 3)
+	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 coluna_1248_to_0123:
 	PUSH R5
-	MOV R5, R0
-	MOV R0, -1
+	MOV R5, R0                   ; valor que vai rodar
+	MOV R0, - 1                  ; R0 vai ser o indicador da coluna
 ciclo_coluna_1248_to_0123:
 	CMP R5, 0
 	JZ fim_coluna_1248_to_0123
 	SHR R5, 1
-	ADD R0, 1
+	ADD R0, 1                    ; incrementa o contador
 	JMP ciclo_coluna_1248_to_0123
 fim_coluna_1248_to_0123:
 	POP R5
 	RET
-
 
