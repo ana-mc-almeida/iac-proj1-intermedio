@@ -24,7 +24,7 @@
 	SELECIONA_CENARIO_FUNDO EQU 6042H ; endereço do comando para selecionar uma imagem de fundo
 	TOCA_SOM EQU 605AH           ; endereço do comando para tocar um som
 	
-	LINHA EQU 16                 ; linha do boneco (a meio do ecrã))
+	LINHA EQU 27                 ; linha do boneco (a meio do ecrã)
 	COLUNA EQU 30                ; coluna do boneco (a meio do ecrã)
 	
 	MIN_COLUNA EQU 0             ; número da coluna mais à esquerda que o objeto pode ocupar
@@ -32,7 +32,7 @@
 	ATRASO EQU 400H              ; atraso para limitar a velocidade de movimento do boneco
 	
 	LARGURA EQU 5                ; largura do boneco
-	ALTURA EQU 5                 ; altura do boneco
+	ALTURA EQU 4                 ; altura do boneco
 	COR_PIXEL EQU 0FF00H         ; cor do pixel: vermelho em ARGB (opaco e vermelho no máximo, verde e azul a 0)
 	
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
@@ -49,15 +49,13 @@ SP_inicial:                   ; este é o endereço (1200H) com que o SP deve se
 DEF_BONECO:                   ; tabela que define o boneco (cor, largura, pixels)
 	WORD ALTURA
 	WORD LARGURA
-	WORD 0, COR_PIXEL, 0, COR_PIXEL, 0 ; # # # as cores podem ser diferentes
-    WORD LARGURA
-	WORD COR_PIXEL, COR_PIXEL, COR_PIXEL, COR_PIXEL, COR_PIXEL ; # # # as cores podem ser diferentes
-    WORD LARGURA
-	WORD COR_PIXEL, COR_PIXEL, COR_PIXEL, COR_PIXEL, COR_PIXEL ; # # # as cores podem ser diferentes
-    WORD LARGURA
-	WORD 0, COR_PIXEL, COR_PIXEL, COR_PIXEL, 0 ; # # # as cores podem ser diferentes
-    WORD LARGURA
 	WORD 0, 0, COR_PIXEL, 0, 0 ; # # # as cores podem ser diferentes
+    WORD LARGURA
+	WORD COR_PIXEL, 0, COR_PIXEL, 0, COR_PIXEL ; # # # as cores podem ser diferentes
+    WORD LARGURA
+	WORD COR_PIXEL, COR_PIXEL, COR_PIXEL, COR_PIXEL, COR_PIXEL ; # # # as cores podem ser diferentes
+    WORD LARGURA
+	WORD 0, COR_PIXEL, 0, COR_PIXEL, 0 ; # # # as cores podem ser diferentes
 	
 	
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
@@ -136,10 +134,10 @@ desenha_boneco:
 	PUSH R4                      ;enderaço da tabela
 	PUSH R5                      ;largura do boneco
 	PUSH R6                      ; altura do boneco
-obtem_altura:
+obtem_altura_desenha:
 	MOV R6, [R4]                 ; obtém a altura do boneco
 	ADD R4, 2                    ; endereço da altura do boneco (2 porque a largura é uma word)
-obtem_largura:
+obtem_largura_desenha:
     MOV R2, COLUNA
 	MOV R5, [R4]                 ; obtém a largura do boneco
 	ADD R4, 2                    ; endereço da cor do 1º pixel (2 porque a largura é uma word)
@@ -152,7 +150,7 @@ desenha_pixels:               ; desenha os pixels do boneco a partir da tabela
 	JNZ desenha_pixels           ; continua até percorrer toda a largura do objeto
     ADD R1, 1
     SUB R6, 1
-    JNZ obtem_largura           ; continua até percorrer toda a altura do objeto
+    JNZ obtem_largura_desenha           ; continua até percorrer toda a altura do objeto
 	POP R6
 	POP R5
 	POP R4
@@ -170,23 +168,35 @@ desenha_pixels:               ; desenha os pixels do boneco a partir da tabela
 	;
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 apaga_boneco:
-	PUSH R2
-	PUSH R3
-	PUSH R4
-	PUSH R5
+    PUSH R1
+	PUSH R2                      ; indicador da coluna em que está a desenhar
+	PUSH R3                      ; indicador da cor que está a desenhar
+	PUSH R4                      ;enderaço da tabela
+	PUSH R5                      ;largura do boneco
+	PUSH R6                      ; altura do boneco
+obtem_altura_apaga:
+	MOV R6, [R4]                 ; obtém a altura do boneco
+	ADD R4, 2                    ; endereço da altura do boneco (2 porque a largura é uma word)
+obtem_largura_apaga:
+    MOV R2, COLUNA
 	MOV R5, [R4]                 ; obtém a largura do boneco
 	ADD R4, 2                    ; endereço da cor do 1º pixel (2 porque a largura é uma word)
-apaga_pixels:                 ; desenha os pixels do boneco a partir da tabela
-	MOV R3, 0                    ; cor para apagar o próximo pixel do boneco
+apaga_pixels:               ; desenha os pixels do boneco a partir da tabela
+	MOV R3, 0                 ; obtém a cor do próximo pixel do boneco
 	CALL escreve_pixel           ; escreve cada pixel do boneco
 	ADD R4, 2                    ; endereço da cor do próximo pixel (2 porque cada cor de pixel é uma word)
 	ADD R2, 1                    ; próxima coluna
 	SUB R5, 1                    ; menos uma coluna para tratar
-	JNZ apaga_pixels             ; continua até percorrer toda a largura do objeto
+	JNZ apaga_pixels           ; continua até percorrer toda a largura do objeto
+    ADD R1, 1
+    SUB R6, 1
+    JNZ obtem_largura_apaga           ; continua até percorrer toda a altura do objeto
+	POP R6
 	POP R5
 	POP R4
 	POP R3
 	POP R2
+    POP R1
 	RET
 	
 	
