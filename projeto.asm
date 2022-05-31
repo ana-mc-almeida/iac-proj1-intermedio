@@ -1,9 +1,8 @@
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 	; * IST - UL
-	; * Modulo: lab5 - move - boneco - teclado - toque.asm
+	; * Modulo: lab5 - move - boneco - teclado.asm
 	; * Descrição: Este programa ilustra o movimento de um boneco do ecrã, sob controlo
-	; * do teclado, em que o boneco só se movimenta um pixel por cada
-	; * tecla carregada (produzindo também um efeito sonoro).
+	; * do teclado.
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 	
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
@@ -16,23 +15,25 @@
 	TECLA_ESQUERDA EQU 1         ; tecla na primeira coluna do teclado (tecla C)
 	TECLA_DIREITA EQU 2          ; tecla na segunda coluna do teclado (tecla D)
 	
+	TECLA_C EQU 0H              ;
+	TECLA_D EQU 1H              ;
+	
+	
 	DEFINE_LINHA EQU 600AH       ; endereço do comando para definir a linha
 	DEFINE_COLUNA EQU 600CH      ; endereço do comando para definir a coluna
 	DEFINE_PIXEL EQU 6012H       ; endereço do comando para escrever um pixel
 	APAGA_AVISO EQU 6040H        ; endereço do comando para apagar o aviso de nenhum cenário selecionado
 	APAGA_ECRÃ EQU 6002H         ; endereço do comando para apagar todos os pixels já desenhados
 	SELECIONA_CENARIO_FUNDO EQU 6042H ; endereço do comando para selecionar uma imagem de fundo
-	TOCA_SOM EQU 605AH           ; endereço do comando para tocar um som
 	
 	LINHA EQU 16                 ; linha do boneco (a meio do ecrã))
 	COLUNA EQU 30                ; coluna do boneco (a meio do ecrã)
 	
 	MIN_COLUNA EQU 0             ; número da coluna mais à esquerda que o objeto pode ocupar
 	MAX_COLUNA EQU 63            ; número da coluna mais à direita que o objeto pode ocupar
-	ATRASO EQU 400H              ; atraso para limitar a velocidade de movimento do boneco
+	ATRASO EQU 200H              ; atraso para limitar a velocidade de movimento do boneco
 	
 	LARGURA EQU 5                ; largura do boneco
-	ALTURA EQU 5                 ; altura do boneco
 	COR_PIXEL EQU 0FF00H         ; cor do pixel: vermelho em ARGB (opaco e vermelho no máximo, verde e azul a 0)
 	
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
@@ -47,17 +48,8 @@ SP_inicial:                   ; este é o endereço (1200H) com que o SP deve se
 	; armazenado em 11FEH (1200H - 2)
 	
 DEF_BONECO:                   ; tabela que define o boneco (cor, largura, pixels)
-	WORD ALTURA
 	WORD LARGURA
-	WORD 0, COR_PIXEL, 0, COR_PIXEL, 0 ; # # # as cores podem ser diferentes
-    WORD LARGURA
-	WORD COR_PIXEL, COR_PIXEL, COR_PIXEL, COR_PIXEL, COR_PIXEL ; # # # as cores podem ser diferentes
-    WORD LARGURA
-	WORD COR_PIXEL, COR_PIXEL, COR_PIXEL, COR_PIXEL, COR_PIXEL ; # # # as cores podem ser diferentes
-    WORD LARGURA
-	WORD 0, COR_PIXEL, COR_PIXEL, COR_PIXEL, 0 ; # # # as cores podem ser diferentes
-    WORD LARGURA
-	WORD 0, 0, COR_PIXEL, 0, 0 ; # # # as cores podem ser diferentes
+	WORD COR_PIXEL, 0, COR_PIXEL, 0, COR_PIXEL ; # # # as cores podem ser diferentes
 	
 	
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
@@ -82,27 +74,19 @@ posicao_boneco:
 mostra_boneco:
 	CALL desenha_boneco          ; desenha o boneco a partir da tabela
 	
-espera_nao_tecla:             ; neste ciclo espera - se até NÃO haver nenhuma tecla premida
+coloca_linha:
 	MOV R6, LINHA_TECLADO        ; linha a testar no teclado
-	CALL teclado                 ; leitura às teclas
-	CMP R0, 0
-	JNZ espera_nao_tecla         ; espera, enquanto houver tecla uma tecla carregada
-	
 espera_tecla:                 ; neste ciclo espera - se até uma tecla ser premida
-	MOV R6, LINHA_TECLADO        ; linha a testar no teclado
+	SHR R6, 1                    ; divide por 2 / / a
 	CALL teclado                 ; leitura às teclas
 	CMP R0, 0
 	JZ espera_tecla              ; espera, enquanto não houver tecla
-	
-	MOV R9, 0                    ; som com número 0
-	MOV [TOCA_SOM], R9           ; comando para tocar o som
-	
-	CMP R0, TECLA_ESQUERDA
+	CMP R0, TECLA_C
 	JNZ testa_direita
 	MOV R7, - 1                  ; vai deslocar para a esquerda
 	JMP ve_limites
 testa_direita:
-	CMP R0, TECLA_DIREITA
+	CMP R0, TECLA_D
 	JNZ espera_tecla             ; tecla que não interessa
 	MOV R7, + 1                  ; vai deslocar para a direita
 	
@@ -130,17 +114,10 @@ coluna_seguinte:
 	;
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 desenha_boneco:
-    PUSH R1
-	PUSH R2                      ; indicador da coluna em que está a desenhar
-	PUSH R3                      ; indicador da cor que está a desenhar
-	PUSH R4                      ;enderaço da tabela
-	PUSH R5                      ;largura do boneco
-	PUSH R6                      ; altura do boneco
-obtem_altura:
-	MOV R6, [R4]                 ; obtém a altura do boneco
-	ADD R4, 2                    ; endereço da altura do boneco (2 porque a largura é uma word)
-obtem_largura:
-    MOV R2, COLUNA
+	PUSH R2
+	PUSH R3
+	PUSH R4
+	PUSH R5
 	MOV R5, [R4]                 ; obtém a largura do boneco
 	ADD R4, 2                    ; endereço da cor do 1º pixel (2 porque a largura é uma word)
 desenha_pixels:               ; desenha os pixels do boneco a partir da tabela
@@ -150,15 +127,10 @@ desenha_pixels:               ; desenha os pixels do boneco a partir da tabela
 	ADD R2, 1                    ; próxima coluna
 	SUB R5, 1                    ; menos uma coluna para tratar
 	JNZ desenha_pixels           ; continua até percorrer toda a largura do objeto
-    ADD R1, 1
-    SUB R6, 1
-    JNZ obtem_largura           ; continua até percorrer toda a altura do objeto
-	POP R6
 	POP R5
 	POP R4
 	POP R3
 	POP R2
-    POP R1
 	RET
 	
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
@@ -262,13 +234,38 @@ teclado:
 	PUSH R2
 	PUSH R3
 	PUSH R5
+	PUSH R4
 	MOV R2, TEC_LIN              ; endereço do periférico das linhas
 	MOV R3, TEC_COL              ; endereço do periférico das colunas
 	MOV R5, MASCARA              ; para isolar os 4 bits de menor peso, ao ler as colunas do teclado
-	MOVB [R2], R6                ; escrever no periférico de saída (linhas)
-	MOVB R0, [R3]                ; ler do periférico de entrada (colunas)
-	AND R0, R5                   ; elimina bits para além dos bits 0 - 3
+	MOV R0, 4
+	MOVB R4, [R2]                ; ler do periférico de entrada (linhas)
+	AND R4, R5                   ; elimina bits para além dos bits 0 - 3
+	CALL converte
+	MUL R4, R0
+	ADD R0, R4
+	MOVB R4, [R3]                ; ler do periférico de entrada (linhas)
+	AND R4, R5                   ; elimina bits para além dos bits 0 - 3
+	CALL converte
+	ADD R0, R4
+	POP R4
 	POP R5
 	POP R3
 	POP R2
+	RET
+	
+	
+converte:
+	PUSH R4
+	MOV R0, 0
+	CMP R4, 0
+	JNZ ciclo
+	POP R4
+	RET
+	
+ciclo:
+	ADD R0, 1
+	SHR R4, 1
+	CMP R4, 0
+	JNZ ciclo
 	RET
