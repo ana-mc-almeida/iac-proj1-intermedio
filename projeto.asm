@@ -5,19 +5,22 @@
 	; * do teclado.
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 	
+	; R1 - linha do boneco
+	; R2 - coluna do boneco
+	;
+	
+	
+	
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 	; * Constantes
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 	TEC_LIN EQU 0C000H           ; endereço das linhas do teclado (periférico POUT - 2)
 	TEC_COL EQU 0E000H           ; endereço das colunas do teclado (periférico PIN)
-	LINHA_TECLADO EQU 8          ; linha a testar (4ª linha, 1000b)
-	MASCARA EQU 0FH              ; para isolar os 4 bits de menor peso, ao ler as colunas do teclado
-	TECLA_ESQUERDA EQU 1         ; tecla na primeira coluna do teclado (tecla C)
-	TECLA_DIREITA EQU 2          ; tecla na segunda coluna do teclado (tecla D)
-	
-	TECLA_C EQU 0H              ;
-	TECLA_D EQU 1H              ;
-	
+	LINHA_TECLADO EQU 16         ; linha a testar (4ª linha, 1000b)
+	MASCARA_1 EQU 0FH            ; para isolar os 4 bits de menor peso, ao ler as colunas do teclado
+	MASCARA_2 EQU 0F0H           ; para isolar os 4 bits de maior peso, ao ler as colunas do teclado
+	TECLA_ESQUERDA EQU 0CH         ; tecla na primeira coluna do teclado (tecla C)
+	TECLA_DIREITA EQU 0DH          ; tecla na segunda coluna do teclado (tecla D)
 	
 	DEFINE_LINHA EQU 600AH       ; endereço do comando para definir a linha
 	DEFINE_COLUNA EQU 600CH      ; endereço do comando para definir a coluna
@@ -74,19 +77,31 @@ posicao_boneco:
 mostra_boneco:
 	CALL desenha_boneco          ; desenha o boneco a partir da tabela
 	
-coloca_linha:
+inicia_linhas:
 	MOV R6, LINHA_TECLADO        ; linha a testar no teclado
 espera_tecla:                 ; neste ciclo espera - se até uma tecla ser premida
-	SHR R6, 1                    ; divide por 2 / / a
+	SHR R6, 1                    ; dividir por 2
+	JZ inicia_linhas             ; se for 0 volta ao "inicio" das linhas
 	CALL teclado                 ; leitura às teclas
 	CMP R0, 0
 	JZ espera_tecla              ; espera, enquanto não houver tecla
-	CMP R0, TECLA_C
+	CALL coluna_1248_to_0123
+	;SHL R6, 4
+	CALL linha_1248_to_0123
+	ADD R6, R6					; R6 = 2 * R6
+	ADD R6, R6					; R6 = 2 * R6  <=> R6 = 4 * R6
+	ADD R0, R6
+	MOV R6, TECLA_ESQUERDA
+	CMP R0, R6
 	JNZ testa_direita
 	MOV R7, - 1                  ; vai deslocar para a esquerda
 	JMP ve_limites
+	
+linha1:
+	
 testa_direita:
-	CMP R0, TECLA_D
+	MOV R6, TECLA_DIREITA
+	CMP R0, R6
 	JNZ espera_tecla             ; tecla que não interessa
 	MOV R7, + 1                  ; vai deslocar para a direita
 	
@@ -234,38 +249,66 @@ teclado:
 	PUSH R2
 	PUSH R3
 	PUSH R5
-	PUSH R4
 	MOV R2, TEC_LIN              ; endereço do periférico das linhas
 	MOV R3, TEC_COL              ; endereço do periférico das colunas
-	MOV R5, MASCARA              ; para isolar os 4 bits de menor peso, ao ler as colunas do teclado
-	MOV R0, 4
-	MOVB R4, [R2]                ; ler do periférico de entrada (linhas)
-	AND R4, R5                   ; elimina bits para além dos bits 0 - 3
-	CALL converte
-	MUL R4, R0
-	ADD R0, R4
-	MOVB R4, [R3]                ; ler do periférico de entrada (linhas)
-	AND R4, R5                   ; elimina bits para além dos bits 0 - 3
-	CALL converte
-	ADD R0, R4
-	POP R4
+	MOV R5, MASCARA_1            ; para isolar os 4 bits de menor peso, ao ler as colunas do teclado
+	MOVB [R2], R6                ; escrever no periférico de saída (linhas)
+	MOVB R0, [R3]                ; ler do periférico de entrada (colunas)
+	AND R0, R5                   ; elimina bits para além dos bits 0 - 3
 	POP R5
 	POP R3
 	POP R2
 	RET
 	
-	
 converte:
-	PUSH R4
+	PUSH R5
+	PUSH R6
+	MOV R5, MASCARA_1            ; para isolar os 4 bits de menor peso, ao ler as colunas do teclado
+	AND R5, R0                   ; coluna
+	SHR R5, 1		; para começar em 0 e não em 1 
+	;MOV R6, MASCARA_2            ; para isolar os 4 bits de maior peso, ao ler as colunas do teclado
+	SHR R0, 4                   
+	MOV R6, R0 					; linha
 	MOV R0, 0
-	CMP R4, 0
-	JNZ ciclo
-	POP R4
+
+	ADD R6, R6					; R6 = 2 * R6
+	ADD R6, R6					; R6 = 2 * R6  <=> R6 = 4 * R6
+
+	ADD R0, R6
+	ADD R0, R5
+
+	POP R6
+	POP R5
+	RET
+
+
+linha_1248_to_0123:
+	PUSH R0
+	MOV R0, R6
+	MOV R6, -1
+ciclo_linha_1248_to_0123:
+	CMP R0, 0
+	JZ fim_linha_1248_to_0123
+	SHR R0, 1
+	ADD R6, 1
+	JMP ciclo_linha_1248_to_0123
+fim_linha_1248_to_0123:
+	POP R0
 	RET
 	
-ciclo:
+
+coluna_1248_to_0123:
+	PUSH R5
+	MOV R5, R0
+	MOV R0, -1
+ciclo_coluna_1248_to_0123:
+	CMP R5, 0
+	JZ fim_coluna_1248_to_0123
+	SHR R5, 1
 	ADD R0, 1
-	SHR R4, 1
-	CMP R4, 0
-	JNZ ciclo
+	JMP ciclo_coluna_1248_to_0123
+fim_coluna_1248_to_0123:
+	POP R5
 	RET
+
+
