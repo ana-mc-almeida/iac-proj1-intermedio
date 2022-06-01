@@ -5,9 +5,9 @@
 	; * do teclado.
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 	
-	; R1 - linha do boneco
-	; R2 - coluna do boneco
-	; R7 - diraçao ig
+	; R1 - linha do rover
+	; R2 - coluna do rover
+	; R11
 	
 	
 	
@@ -30,16 +30,24 @@
 	APAGA_ECRA EQU 6002H         ; endereço do comando para apagar todos os pixels já desenhados
 	SELECIONA_CENARIO_FUNDO EQU 6042H ; endereço do comando para selecionar uma imagem de fundo
 	
-	LINHA EQU 27                 ; linha do boneco (a meio do ecrã))
-	COLUNA EQU 30                ; coluna do boneco (a meio do ecrã)
+	LINHA_INICIAL_ROVER EQU 27   ; linha do rover (a meio do ecrã)
+	COLUNA_INICIAL_ROVER EQU 30  ; coluna do rover (a meio do ecrã)
+	
+	LINHA_INICIAL_METEORO EQU 16 ; linha do meteoro (a meio do ecrã)
+	COLUNA_INICIAL_METEORO EQU 30 ; coluna do meteoro (a meio do ecrã)
 	
 	MIN_COLUNA EQU 0             ; número da coluna mais à esquerda que o objeto pode ocupar
 	MAX_COLUNA EQU 63            ; número da coluna mais à direita que o objeto pode ocupar
 	ATRASO EQU 200H              ; atraso para limitar a velocidade de movimento do boneco
 	
-	LARGURA EQU 5                ; largura do boneco
-	ALTURA EQU 4
-	COR_PIXEL EQU 0F0F0H         ; cor do pixel: vermelho em ARGB (opaco e vermelho no máximo, verde e azul a 0)
+	LARGURA_ROVER EQU 5          ; largura do rover
+	ALTURA_ROVER EQU 4           ; altura do rover
+	LARGURA_METEORO_MAU EQU 5    ; largura do meteoro mau
+	ALTURA_METEORO_MAU EQU 5     ; altura meteoro mau
+	
+	
+	COR_AMARELA EQU 0FFF0H       ; cor do pixel: amarelo em ARGB (opaco, vermelho no máximo, verde no máximo e azul a 0)
+	COR_VERMELHA EQU 0FF00H      ; cor do pixel: vermelho em ARGB (opaco, vermelho no máximo, verde e azul a 0)
 	
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 	; * Dados
@@ -53,13 +61,27 @@ SP_inicial:                   ; este é o endereço (1200H) com que o SP deve se
 	; armazenado em 11FEH (1200H - 2)
 	
 DEF_ROVER:                    ; tabela que define o boneco (cor, largura, pixels)
-	WORD LARGURA
-	WORD ALTURA
-	WORD 0, 0, COR_PIXEL, 0, 0   ; # # # as cores podem ser diferentes
-	WORD COR_PIXEL, 0, COR_PIXEL, 0, COR_PIXEL ; # # # as cores podem ser diferentes
-	WORD COR_PIXEL, COR_PIXEL, COR_PIXEL, COR_PIXEL, COR_PIXEL ; # # # as cores podem ser diferentes
-	WORD 0, COR_PIXEL, 0, COR_PIXEL, 0 ; # # # as cores podem ser diferentes
+	WORD LARGURA_ROVER
+	WORD ALTURA_ROVER
+	WORD 0, 0, COR_AMARELA, 0, 0 ; # # # as cores podem ser diferentes
+	WORD COR_AMARELA, 0, COR_AMARELA, 0, COR_AMARELA ; # # # as cores podem ser diferentes
+	WORD COR_AMARELA, COR_AMARELA, COR_AMARELA, COR_AMARELA, COR_AMARELA ; # # # as cores podem ser diferentes
+	WORD 0, COR_AMARELA, 0, COR_AMARELA, 0 ; # # # as cores podem ser diferentes
 	
+DEF_METEORO_MAU:              ; tabela que define o meteoro mau (cor, largura, pixels)
+	WORD LARGURA_METEORO_MAU
+	WORD ALTURA_METEORO_MAU
+	WORD COR_VERMELHA, 0, 0, 0, COR_VERMELHA ; # # # as cores podem ser diferentes
+	WORD COR_VERMELHA, 0, COR_VERMELHA, 0, COR_VERMELHA ; # # # as cores podem ser diferentes
+	WORD 0, COR_VERMELHA, COR_VERMELHA, COR_VERMELHA, 0 ; # # # as cores podem ser diferentes
+	WORD COR_VERMELHA, 0, COR_VERMELHA, 0, COR_VERMELHA ; # # # as cores podem ser diferentes
+	WORD COR_VERMELHA, 0, 0, 0, COR_VERMELHA ; # # # as cores podem ser diferentes
+	
+COLUNA_ROVER: WORD COLUNA_INICIAL_ROVER
+LINHA_ROVER: WORD LINHA_INICIAL_ROVER
+	
+COLUNA_METEORO: WORD COLUNA_INICIAL_METEORO
+LINHA_METEORO: WORD LINHA_INICIAL_METEORO
 	
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 	; * Código
@@ -75,12 +97,13 @@ inicio:
 	MOV [SELECIONA_CENARIO_FUNDO], R1 ; seleciona o cenário de fundo
 	MOV R7, 1                    ; valor a somar à coluna do boneco, para o movimentar
 	
-posicao_boneco:
-	MOV R1, LINHA                ; linha do boneco
-	MOV R2, COLUNA               ; coluna do boneco
-	MOV R4, DEF_ROVER            ; endereço da tabela que define o boneco
 	
-mostra_boneco:
+mostra_rover:
+	CALL posicao_rover           ; obtem a posicao do rover
+	CALL desenha_boneco          ; desenha o boneco a partir da tabela
+
+mostra_meteoro:
+	CALL posicao_meteoro           ; obtem a posicao do rover
 	CALL desenha_boneco          ; desenha o boneco a partir da tabela
 	
 inicia_linhas:
@@ -123,18 +146,21 @@ testa_direita:
 	;JMP ve_limites ;linha desnecessária porque a rotina vem mesmo a seguir
 	
 ve_limites:
+	CALL posicao_rover
 	MOV R6, [R4]                 ; obtém a largura do boneco
 	CALL testa_limites           ; vê se chegou aos limites do ecrã e se sim força R7 a 0
 	CMP R7, 0
 	JZ espera_tecla              ; se não é para movimentar o objeto, vai ler o teclado de novo
 	
-move_boneco:
+move_rover:
+	CALL posicao_rover
 	CALL apaga_boneco            ; apaga o boneco na sua posição corrente
 	
 coluna_seguinte:
+	;CALL posicao_rover desnecessario porque já faz isto no move boneco
 	ADD R2, R7                   ; para desenhar objeto na coluna seguinte (direita ou esquerda)
-	
-	JMP mostra_boneco            ; vai desenhar o boneco de novo
+	MOV [COLUNA_ROVER], R2
+	JMP mostra_rover             ; vai desenhar o boneco de novo
 	
 	
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
@@ -331,4 +357,18 @@ ciclo_1248_to_0123:
 	JNZ ciclo_1248_to_0123       ; repete o ciclo enquanto R5 = / = 0
 fim_1248_to_0123:
 	POP R5
+	RET
+	
+	
+	
+posicao_rover:
+	MOV R1, [LINHA_ROVER]        ; linha do boneco
+	MOV R2, [COLUNA_ROVER]       ; coluna do boneco
+	MOV R4, DEF_ROVER            ; endereço da tabela que define o boneco
+	RET
+
+posicao_meteoro:
+	MOV R1, [LINHA_METEORO]        ; linha do boneco
+	MOV R2, [COLUNA_METEORO]       ; coluna do boneco
+	MOV R4, DEF_METEORO_MAU            ; endereço da tabela que define o boneco
 	RET
