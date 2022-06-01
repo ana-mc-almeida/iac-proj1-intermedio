@@ -14,6 +14,7 @@
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 	; * Constantes
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+	DISPLAYS EQU 0A000H          ; endereço do display
 	TEC_LIN EQU 0C000H           ; endereço das linhas do teclado (periférico POUT - 2)
 	TEC_COL EQU 0E000H           ; endereço das colunas do teclado (periférico PIN)
 	LINHA_TECLADO EQU 16         ; linha a testar (4ª linha, 1000b)
@@ -22,7 +23,9 @@
 	; teclas com funções
 	TECLA_00 EQU 00H             ; tecla na primeira coluna do teclado (tecla 0)
 	TECLA_02 EQU 02H             ; tecla na segunda coluna do teclado (tecla 2)
-	TECLA_03 EQU 03H             ; tecla na segunda coluna do teclado (tecla 2)
+	TECLA_03 EQU 03H             ; tecla na segunda coluna do teclado (tecla 3)
+	TECLA_05 EQU 05H             ; tecla 5
+	TECLA_09 EQU 09H             ; tecla 9
 	
 	DEFINE_LINHA EQU 600AH       ; endereço do comando para definir a linha
 	DEFINE_COLUNA EQU 600CH      ; endereço do comando para definir a coluna
@@ -49,6 +52,7 @@
 	LARGURA_METEORO_MAU EQU 5    ; largura do meteoro mau
 	ALTURA_METEORO_MAU EQU 5     ; altura meteoro mau
 	
+	INICIO_DISPLAY EQU 020H
 	
 	COR_AMARELA EQU 0FFF0H       ; cor do pixel: amarelo em ARGB (opaco, vermelho no máximo, verde no máximo e azul a 0)
 	COR_VERMELHA EQU 0FF00H      ; cor do pixel: vermelho em ARGB (opaco, vermelho no máximo, verde e azul a 0)
@@ -87,6 +91,8 @@ LINHA_ROVER: WORD LINHA_INICIAL_ROVER
 COLUNA_METEORO: WORD COLUNA_INICIAL_METEORO
 LINHA_METEORO: WORD LINHA_INICIAL_METEORO
 	
+DISPLAY: WORD INICIO_DISPLAY
+	
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 	; * Código
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
@@ -99,15 +105,20 @@ inicio:
 	MOV [APAGA_ECRA], R1         ; apaga todos os pixels já desenhados (o valor de R1 não é relevante)
 	MOV R1, 0                    ; cenário de fundo número 0
 	MOV [SELECIONA_CENARIO_FUNDO], R1 ; seleciona o cenário de fundo
+	MOV R11, [DISPLAY]
+	MOV [DISPLAYS], R11
 	MOV R7, 1                    ; valor a somar à coluna do boneco, para o movimentar
-	
-	
-mostra_rover:
-	CALL posicao_rover           ; obtem a posicao do rover
-	CALL desenha_boneco          ; desenha o boneco a partir da tabela
+
+	MOV R10, 0
 	
 mostra_meteoro:
 	CALL posicao_meteoro         ; obtem a posicao do rover
+	CALL desenha_boneco          ; desenha o boneco a partir da tabela
+	CMP R10, 0
+	JNZ espera_nao_tecla
+
+mostra_rover:
+	CALL posicao_rover           ; obtem a posicao do rover
 	CALL desenha_boneco          ; desenha o boneco a partir da tabela
 	
 inicia_linhas:
@@ -115,6 +126,7 @@ inicia_linhas:
 espera_tecla:                 ; neste ciclo espera - se até uma tecla ser premida
 	SHR R6, 1                    ; dividir por 2
 	JZ inicia_linhas             ; se for 0 volta ao "inicio" das linhas
+	MOV R10, R6                  ; memoriza a linha pressionada
 	CALL teclado                 ; leitura às teclas
 	CMP R0, 0                    ; se diferente de 0 vai dizer a coluna ( entre 1 e 8)
 	JZ espera_tecla              ; espera, enquanto não houver tecla
@@ -138,12 +150,30 @@ espera_tecla:                 ; neste ciclo espera - se até uma tecla ser premi
 	MOV R6, TECLA_02
 	CMP R0, R6
 	JZ testa_direita
-
+	
 	MOV R6, TECLA_03
 	CMP R0, R6
 	JZ move_meteoro
 	
+	
+	MOV R6, TECLA_05
+	CMP R0, R6
+	JZ testa_cima
+	
+	MOV R6, TECLA_09
+	CMP R0, R6
+	JZ testa_baixo
+	
 	JMP espera_tecla
+	
+espera_nao_tecla:             ; neste ciclo espera - se até uma tecla ser premida
+	CMP R10, 0 ;verifica se é o inicial
+	JZ espera_tecla
+	MOV R6, R10
+	CALL teclado
+	CMP R0, 0                    ; se diferente de 0 vai dizer a coluna ( entre 1 e 8)
+	JZ espera_tecla
+	JMP espera_nao_tecla
 	
 testa_esquerda:
 	MOV R7, - 1                  ; vai deslocar para a esquerda
@@ -169,6 +199,21 @@ coluna_seguinte:
 	ADD R2, R7                   ; para desenhar objeto na coluna seguinte (direita ou esquerda)
 	MOV [COLUNA_ROVER], R2
 	JMP mostra_rover             ; vai desenhar o boneco de novo
+	
+testa_cima:
+	MOV R11, [DISPLAY]
+	ADD R11, 1
+	MOV [DISPLAYS], R11
+	MOV [DISPLAY], R11
+	JMP espera_nao_tecla
+	
+testa_baixo:
+	MOV R11, [DISPLAY]
+	SUB R11, 1
+	MOV [DISPLAYS], R11
+	MOV [DISPLAY], R11
+	JMP espera_nao_tecla
+	
 	
 move_meteoro:
 	CALL posicao_meteoro
