@@ -30,6 +30,7 @@
 	APAGA_AVISO EQU 6040H        ; endereço do comando para apagar o aviso de nenhum cenário selecionado
 	APAGA_ECRA EQU 6002H         ; endereço do comando para apagar todos os pixels já desenhados
 	SELECIONA_CENARIO_FUNDO EQU 6042H ; endereço do comando para selecionar uma imagem de fundo
+	SELECIONA_SOM EQU 605AH 		; endereço do comando para selecionar um som de fundo
 	
 	LINHA_INICIAL_ROVER EQU 27   ; linha do rover (a meio do ecrã)
 	COLUNA_INICIAL_ROVER EQU 30  ; coluna do rover (a meio do ecrã)
@@ -172,6 +173,9 @@ coluna_seguinte:
 move_meteoro:
 	CALL posicao_meteoro
 	CALL apaga_boneco            ; apaga o boneco na sua posição corrente
+	MOV	R5, 1 					 ;som
+	MOV  [SELECIONA_SOM], R5
+	MOV	R5, 0 					 ;som
 	
 linha_seguinte:
 	;CALL posicao_rover desnecessario porque já faz isto no move boneco
