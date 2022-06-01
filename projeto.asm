@@ -22,6 +22,7 @@
 	; teclas com funções
 	TECLA_00 EQU 00H             ; tecla na primeira coluna do teclado (tecla 0)
 	TECLA_02 EQU 02H             ; tecla na segunda coluna do teclado (tecla 2)
+	TECLA_03 EQU 03H             ; tecla na segunda coluna do teclado (tecla 2)
 	
 	DEFINE_LINHA EQU 600AH       ; endereço do comando para definir a linha
 	DEFINE_COLUNA EQU 600CH      ; endereço do comando para definir a coluna
@@ -33,11 +34,13 @@
 	LINHA_INICIAL_ROVER EQU 27   ; linha do rover (a meio do ecrã)
 	COLUNA_INICIAL_ROVER EQU 30  ; coluna do rover (a meio do ecrã)
 	
-	LINHA_INICIAL_METEORO EQU 16 ; linha do meteoro (a meio do ecrã)
+	LINHA_INICIAL_METEORO EQU 10 ; linha do meteoro (a meio do ecrã)
 	COLUNA_INICIAL_METEORO EQU 30 ; coluna do meteoro (a meio do ecrã)
 	
 	MIN_COLUNA EQU 0             ; número da coluna mais à esquerda que o objeto pode ocupar
 	MAX_COLUNA EQU 63            ; número da coluna mais à direita que o objeto pode ocupar
+	MAX_LINHA EQU 31             ; número da linha
+	MIN_LINHA EQU 0              ; número da linha
 	ATRASO EQU 200H              ; atraso para limitar a velocidade de movimento do boneco
 	
 	LARGURA_ROVER EQU 5          ; largura do rover
@@ -101,9 +104,9 @@ inicio:
 mostra_rover:
 	CALL posicao_rover           ; obtem a posicao do rover
 	CALL desenha_boneco          ; desenha o boneco a partir da tabela
-
+	
 mostra_meteoro:
-	CALL posicao_meteoro           ; obtem a posicao do rover
+	CALL posicao_meteoro         ; obtem a posicao do rover
 	CALL desenha_boneco          ; desenha o boneco a partir da tabela
 	
 inicia_linhas:
@@ -134,6 +137,10 @@ espera_tecla:                 ; neste ciclo espera - se até uma tecla ser premi
 	MOV R6, TECLA_02
 	CMP R0, R6
 	JZ testa_direita
+
+	MOV R6, TECLA_03
+	CMP R0, R6
+	JZ move_meteoro
 	
 	JMP espera_tecla
 	
@@ -162,6 +169,23 @@ coluna_seguinte:
 	MOV [COLUNA_ROVER], R2
 	JMP mostra_rover             ; vai desenhar o boneco de novo
 	
+move_meteoro:
+	CALL posicao_meteoro
+	CALL apaga_boneco            ; apaga o boneco na sua posição corrente
+	
+linha_seguinte:
+	;CALL posicao_rover desnecessario porque já faz isto no move boneco
+	ADD R1, 1                    ; para desenhar objeto na coluna seguinte (direita ou esquerda)
+	MOV R6, MAX_LINHA
+	CMP R1, R6
+	JZ reinicia_meteoro
+	MOV [LINHA_METEORO], R1
+	JMP mostra_meteoro           ; vai desenhar o boneco de novo
+	
+reinicia_meteoro:
+	MOV R1, MIN_LINHA            ; coloca o meteoro no início do ecrã
+	MOV [LINHA_METEORO], R1
+	JMP mostra_meteoro           ; vai desenhar o boneco de novo
 	
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 	; DESENHA_BONECO - Desenha um boneco na linha e coluna indicadas
@@ -360,15 +384,34 @@ fim_1248_to_0123:
 	RET
 	
 	
+	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+	; posicao_rover - Converte o valor entre (1, 2, 4 ou 8) para um valor entre (0, 1, 2, 3)
+	; Argumentos: nenhuma
+	;
+	; Retorna:
+	; R1 - linha do rover
+	; R2 - coluna do rover
+	; R4 - endereço da tabela que define o rover
+	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 	
 posicao_rover:
-	MOV R1, [LINHA_ROVER]        ; linha do boneco
-	MOV R2, [COLUNA_ROVER]       ; coluna do boneco
-	MOV R4, DEF_ROVER            ; endereço da tabela que define o boneco
+	MOV R1, [LINHA_ROVER]        ; linha do rover
+	MOV R2, [COLUNA_ROVER]       ; coluna do rover
+	MOV R4, DEF_ROVER            ; endereço da tabela que define o rover
 	RET
-
+	
+	
+	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+	; posicao_rover - Retorna as informações do
+	; Argumentos: nenhuma
+	;
+	; Retorna:
+	; R1 - linha do meteoro
+	; R2 - coluna do meteoro
+	; R4 - endereço da tabela que define o meteoro
+	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 posicao_meteoro:
-	MOV R1, [LINHA_METEORO]        ; linha do boneco
-	MOV R2, [COLUNA_METEORO]       ; coluna do boneco
-	MOV R4, DEF_METEORO_MAU            ; endereço da tabela que define o boneco
+	MOV R1, [LINHA_METEORO]      ; linha do meteoro
+	MOV R2, [COLUNA_METEORO]     ; coluna do meteoro
+	MOV R4, DEF_METEORO_MAU      ; endereço da tabela que define o meteoro
 	RET
