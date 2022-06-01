@@ -107,14 +107,17 @@ inicio:
 	MOV R11, [DISPLAY]
 	MOV [DISPLAYS], R11
 	MOV R7, 1                    ; valor a somar à coluna do boneco, para o movimentar
-	
-	
-mostra_rover:
-	CALL posicao_rover           ; obtem a posicao do rover
-	CALL desenha_boneco          ; desenha o boneco a partir da tabela
+
+	MOV R10, 0
 	
 mostra_meteoro:
 	CALL posicao_meteoro         ; obtem a posicao do rover
+	CALL desenha_boneco          ; desenha o boneco a partir da tabela
+	CMP R10, 0
+	JNZ espera_nao_tecla
+
+mostra_rover:
+	CALL posicao_rover           ; obtem a posicao do rover
 	CALL desenha_boneco          ; desenha o boneco a partir da tabela
 	
 inicia_linhas:
@@ -122,7 +125,7 @@ inicia_linhas:
 espera_tecla:                 ; neste ciclo espera - se até uma tecla ser premida
 	SHR R6, 1                    ; dividir por 2
 	JZ inicia_linhas             ; se for 0 volta ao "inicio" das linhas
-	MOV R10, R6
+	MOV R10, R6                  ; memoriza a linha pressionada
 	CALL teclado                 ; leitura às teclas
 	CMP R0, 0                    ; se diferente de 0 vai dizer a coluna ( entre 1 e 8)
 	JZ espera_tecla              ; espera, enquanto não houver tecla
@@ -163,6 +166,8 @@ espera_tecla:                 ; neste ciclo espera - se até uma tecla ser premi
 	JMP espera_tecla
 	
 espera_nao_tecla:             ; neste ciclo espera - se até uma tecla ser premida
+	CMP R10, 0 ;verifica se é o inicial
+	JZ espera_tecla
 	MOV R6, R10
 	CALL teclado
 	CMP R0, 0                    ; se diferente de 0 vai dizer a coluna ( entre 1 e 8)
