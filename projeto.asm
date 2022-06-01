@@ -218,9 +218,8 @@ testa_baixo:
 move_meteoro:
 	CALL posicao_meteoro
 	CALL apaga_boneco            ; apaga o boneco na sua posição corrente
-	MOV	R5, 1 					 ;som
-	MOV  [SELECIONA_SOM], R5
 	MOV	R5, 0 					 ;som
+	MOV  [SELECIONA_SOM], R5
 	
 linha_seguinte:
 	;CALL posicao_rover desnecessario porque já faz isto no move boneco
