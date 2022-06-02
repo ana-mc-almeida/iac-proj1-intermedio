@@ -5,7 +5,7 @@
 	; * Constituição do Grupo: 
 	; * 	Alice Mota 			102500 
 	; * 	Mafalda Matias 		103756 
-	; * 	Ana Almeid 			102618
+	; * 	Ana Almeida			102618
 	; * Descrição: Fase intermédia de um jogo de simulação de um rover a 
 	; * defender o planeta X, que deve obter energia de meteoros bons e 
 	; * destruir meteoros maus.
@@ -262,6 +262,7 @@ obtem_altura_desenha:			 ; neste ciclo é obtida a altura do objeto
 	ADD R4, 2                    ; endereço da altura do objeto
 	MOV R6, [R4]                 ; obtém a altura do objeto
 	ADD R4, 2                    ; endereço da cor do próximo pixel
+	MOV R7, R2					 ; guarda a coluna em que o objeto esta 
 obtem_largura_desenha:			 ; neste ciclo é obtida a largura do objeto
 	MOV R2, R7
 	MOV R5, R8                   ; obtém a largura do objeto
