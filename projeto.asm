@@ -35,7 +35,7 @@
 	MAX_COLUNA EQU 63            ; número da coluna mais à direita que o objeto pode ocupar
 	MAX_LINHA EQU 31             ; número da linha
 	MIN_LINHA EQU 0              ; número da linha
-	ATRASO EQU 200H              ; atraso para limitar a velocidade de movimento do boneco
+	ATRASO EQU 0FFFH              ; atraso para limitar a velocidade de movimento do boneco
 	
 	LARGURA_ROVER EQU 5          ; largura do rover
 	ALTURA_ROVER EQU 4           ; altura do rover
@@ -187,6 +187,8 @@ ve_limites:
 	JZ espera_tecla              ; se não é para movimentar o objeto, vai ler o teclado de novo
 	
 move_rover:
+	MOV	R11, ATRASO		; atraso para limitar a velocidade de movimento do boneco		
+	CALL	atraso
 	CALL posicao_rover
 	CALL apaga_boneco            ; apaga o boneco na sua posição corrente
 	
