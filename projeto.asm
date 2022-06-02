@@ -38,7 +38,7 @@
 	LINHA_INICIAL_ROVER EQU 27			; linha do rover
 	COLUNA_INICIAL_ROVER EQU 30			; coluna do rover
 	
-	LINHA_INICIAL_METEORO EQU 10		; linha do meteoro
+	LINHA_INICIAL_METEORO EQU 0		; linha do meteoro
 	COLUNA_INICIAL_METEORO EQU 30 		; coluna do meteoro
 	
 	INICIO_DISPLAY EQU 020H				; valor inicial do display
@@ -47,7 +47,7 @@
 	MAX_COLUNA EQU 63           		; coluna mais à direita
 	MAX_LINHA EQU 31             		; linha inferior
 	MIN_LINHA EQU 0             		; linha superior
-	ATRASO EQU 200H              		; atraso para limitar a velocidade de movimento do objeto
+	ATRASO EQU 7FFFH              		; atraso para limitar a velocidade de movimento do objeto
 	
 	LARGURA_ROVER EQU 5          		; largura do rover
 	ALTURA_ROVER EQU 4           		; altura do rover
@@ -198,6 +198,8 @@ ve_limites:								; neste ciclo, vê se o objeto está dentro dos limites do ec
 	JZ espera_tecla              		; se não movimentar o objeto, lê o teclado de novo
 	
 move_rover:								; neste ciclo o rover muda de posição
+	MOV	R11, ATRASO						; limitar a velocidade de movimento do rover		
+	CALL	atraso
 	CALL posicao_rover					; vê qual é a posição atual do Rover
 	CALL apaga_objeto            		; apaga o rover na sua posição corrente
 	
