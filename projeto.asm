@@ -5,12 +5,6 @@
 	; * do teclado.
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 	
-	; R1 - linha do rover
-	; R2 - coluna do rover
-	; R11
-	
-	
-	
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 	; * Constantes
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
@@ -20,12 +14,6 @@
 	LINHA_TECLADO EQU 16         ; linha a testar (4ª linha, 1000b)
 	MASCARA EQU 0FH              ; para isolar os 4 bits de menor peso, ao ler as colunas do teclado
 	
-	; teclas com funções
-	TECLA_00 EQU 00H             ; tecla na primeira coluna do teclado (tecla 0)
-	TECLA_02 EQU 02H             ; tecla na segunda coluna do teclado (tecla 2)
-	TECLA_03 EQU 03H             ; tecla na segunda coluna do teclado (tecla 3)
-	TECLA_05 EQU 05H             ; tecla 5
-	TECLA_09 EQU 09H             ; tecla 9
 	
 	DEFINE_LINHA EQU 600AH       ; endereço do comando para definir a linha
 	DEFINE_COLUNA EQU 600CH      ; endereço do comando para definir a coluna
@@ -33,13 +21,15 @@
 	APAGA_AVISO EQU 6040H        ; endereço do comando para apagar o aviso de nenhum cenário selecionado
 	APAGA_ECRA EQU 6002H         ; endereço do comando para apagar todos os pixels já desenhados
 	SELECIONA_CENARIO_FUNDO EQU 6042H ; endereço do comando para selecionar uma imagem de fundo
-	SELECIONA_SOM EQU 605AH 		; endereço do comando para selecionar um som de fundo
+	SELECIONA_SOM EQU 605AH      ; endereço do comando para selecionar um som de fundo
 	
 	LINHA_INICIAL_ROVER EQU 27   ; linha do rover (a meio do ecrã)
 	COLUNA_INICIAL_ROVER EQU 30  ; coluna do rover (a meio do ecrã)
 	
 	LINHA_INICIAL_METEORO EQU 10 ; linha do meteoro (a meio do ecrã)
 	COLUNA_INICIAL_METEORO EQU 30 ; coluna do meteoro (a meio do ecrã)
+	
+	INICIO_DISPLAY EQU 020H
 	
 	MIN_COLUNA EQU 0             ; número da coluna mais à esquerda que o objeto pode ocupar
 	MAX_COLUNA EQU 63            ; número da coluna mais à direita que o objeto pode ocupar
@@ -52,10 +42,17 @@
 	LARGURA_METEORO_MAU EQU 5    ; largura do meteoro mau
 	ALTURA_METEORO_MAU EQU 5     ; altura meteoro mau
 	
-	INICIO_DISPLAY EQU 020H
 	
+	; cores
 	COR_AMARELA EQU 0FFF0H       ; cor do pixel: amarelo em ARGB (opaco, vermelho no máximo, verde no máximo e azul a 0)
 	COR_VERMELHA EQU 0FF00H      ; cor do pixel: vermelho em ARGB (opaco, vermelho no máximo, verde e azul a 0)
+	
+	; teclas com funções
+	TECLA_00 EQU 00H             ; tecla 0
+	TECLA_02 EQU 02H             ; tecla 2
+	TECLA_03 EQU 03H             ; tecla 3
+	TECLA_05 EQU 05H             ; tecla 5
+	TECLA_09 EQU 09H             ; tecla 9
 	
 	; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 	; * Dados
@@ -108,15 +105,14 @@ inicio:
 	MOV R11, [DISPLAY]
 	MOV [DISPLAYS], R11
 	MOV R7, 1                    ; valor a somar à coluna do boneco, para o movimentar
-
-	MOV R10, 0
+	MOV R10, 0                   ; flag para desenhar meteoro pela primeira vez
 	
 mostra_meteoro:
 	CALL posicao_meteoro         ; obtem a posicao do rover
 	CALL desenha_boneco          ; desenha o boneco a partir da tabela
-	CMP R10, 0
-	JNZ espera_nao_tecla
-
+	CMP R10, 0                   ; caso não seja a primeira vez que se está a desenhar o meteoro
+	JNZ espera_nao_tecla         ; é preciso esperar que a tecla não esteja a ser pressionada
+	
 mostra_rover:
 	CALL posicao_rover           ; obtem a posicao do rover
 	CALL desenha_boneco          ; desenha o boneco a partir da tabela
@@ -167,7 +163,7 @@ espera_tecla:                 ; neste ciclo espera - se até uma tecla ser premi
 	JMP espera_tecla
 	
 espera_nao_tecla:             ; neste ciclo espera - se até uma tecla ser premida
-	CMP R10, 0 ;verifica se é o inicial
+	CMP R10, 0                   ;verifica se é o inicial
 	JZ espera_tecla
 	MOV R6, R10
 	CALL teclado
@@ -218,8 +214,8 @@ testa_baixo:
 move_meteoro:
 	CALL posicao_meteoro
 	CALL apaga_boneco            ; apaga o boneco na sua posição corrente
-	MOV	R5, 0 					 ;som
-	MOV  [SELECIONA_SOM], R5
+	MOV R5, 0                    ;som
+	MOV [SELECIONA_SOM], R5
 	
 linha_seguinte:
 	;CALL posicao_rover desnecessario porque já faz isto no move boneco
