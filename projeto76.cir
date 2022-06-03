@@ -7,17 +7,17 @@
   "showConnectionColors" : false,
   "zoomScale" : 90,
   "gridVisible" : true,
-  "primary screen width" : 1536,
-  "primary screen height" : 864,
+  "primary screen width" : 1920,
+  "primary screen height" : 1080,
   "window" : {
-    "X absolute" : 76,
-    "Y absolute" : 42,
-    "X relative" : 76,
-    "Y relative" : 42,
-    "width" : 1236,
-    "height" : 764,
-    "leftRightDividerLocation" : 237,
-    "topBottomDividerLocation" : 618
+    "X absolute" : 95,
+    "Y absolute" : 53,
+    "X relative" : 95,
+    "Y relative" : 53,
+    "width" : 1545,
+    "height" : 955,
+    "leftRightDividerLocation" : 296,
+    "topBottomDividerLocation" : 773
   },
   "connections" : [ {
     "className" : "Connection",
@@ -28,17 +28,17 @@
       "sourcePinID" : 29,
       "targetPinID" : 39,
       "points" : [ {
-        "X" : 332,
-        "Y" : 351
+        "X" : 395,
+        "Y" : 439
       }, {
-        "X" : 336,
-        "Y" : 351
+        "X" : 420,
+        "Y" : 439
       }, {
-        "X" : 336,
-        "Y" : 332
+        "X" : 420,
+        "Y" : 415
       }, {
-        "X" : 362,
-        "Y" : 332
+        "X" : 453,
+        "Y" : 415
       } ]
     } ]
   }, {
@@ -50,17 +50,17 @@
       "sourcePinID" : 30,
       "targetPinID" : 40,
       "points" : [ {
-        "X" : 332,
-        "Y" : 367
+        "X" : 395,
+        "Y" : 459
       }, {
-        "X" : 349,
-        "Y" : 367
+        "X" : 436,
+        "Y" : 459
       }, {
-        "X" : 349,
-        "Y" : 348
+        "X" : 436,
+        "Y" : 435
       }, {
-        "X" : 362,
-        "Y" : 348
+        "X" : 453,
+        "Y" : 435
       } ]
     } ]
   }, {
@@ -72,17 +72,17 @@
       "sourcePinID" : 41,
       "targetPinID" : 20,
       "points" : [ {
-        "X" : 456,
-        "Y" : 332
+        "X" : 551,
+        "Y" : 415
       }, {
-        "X" : 454,
-        "Y" : 332
+        "X" : 568,
+        "Y" : 415
       }, {
-        "X" : 454,
-        "Y" : 150
+        "X" : 568,
+        "Y" : 188
       }, {
-        "X" : 644,
-        "Y" : 150
+        "X" : 805,
+        "Y" : 188
       } ]
     } ]
   }, {
@@ -94,43 +94,43 @@
       "sourcePinID" : 23,
       "targetPinID" : 11,
       "points" : [ {
-        "X" : 644,
-        "Y" : 166
+        "X" : 805,
+        "Y" : 208
       }, {
-        "X" : 351,
-        "Y" : 166
+        "X" : 406,
+        "Y" : 208
       } ]
     }, {
       "sourcePinID" : 69,
       "targetPinID" : 11,
       "points" : [ {
-        "X" : 644,
-        "Y" : 614
+        "X" : 805,
+        "Y" : 768
       }, {
-        "X" : 576,
-        "Y" : 614
+        "X" : 720,
+        "Y" : 768
       }, {
-        "X" : 576,
-        "Y" : 166
+        "X" : 720,
+        "Y" : 208
       }, {
-        "X" : 351,
-        "Y" : 166
+        "X" : 406,
+        "Y" : 208
       } ]
     }, {
       "sourcePinID" : 90,
       "targetPinID" : 11,
       "points" : [ {
-        "X" : 644,
-        "Y" : 297
+        "X" : 805,
+        "Y" : 371
       }, {
-        "X" : 576,
-        "Y" : 297
+        "X" : 720,
+        "Y" : 371
       }, {
-        "X" : 576,
-        "Y" : 166
+        "X" : 720,
+        "Y" : 208
       }, {
-        "X" : 351,
-        "Y" : 166
+        "X" : 406,
+        "Y" : 208
       } ]
     } ]
   }, {
@@ -142,49 +142,49 @@
       "sourcePinID" : 21,
       "targetPinID" : 10,
       "points" : [ {
-        "X" : 644,
-        "Y" : 182
+        "X" : 805,
+        "Y" : 228
       }, {
-        "X" : 350,
-        "Y" : 182
+        "X" : 405,
+        "Y" : 228
       } ]
     }, {
       "sourcePinID" : 88,
       "targetPinID" : 10,
       "points" : [ {
-        "X" : 644,
-        "Y" : 313
+        "X" : 805,
+        "Y" : 391
       }, {
-        "X" : 538,
-        "Y" : 313
+        "X" : 673,
+        "Y" : 391
       }, {
-        "X" : 538,
-        "Y" : 182
+        "X" : 673,
+        "Y" : 228
       }, {
-        "X" : 350,
-        "Y" : 182
+        "X" : 405,
+        "Y" : 228
       } ]
     }, {
       "sourcePinID" : 10,
       "targetPinID" : 106,
       "points" : [ {
-        "X" : 350,
-        "Y" : 182
+        "X" : 405,
+        "Y" : 228
       }, {
-        "X" : 538,
-        "Y" : 182
+        "X" : 673,
+        "Y" : 228
       }, {
-        "X" : 538,
-        "Y" : 365
+        "X" : 673,
+        "Y" : 456
       }, {
-        "X" : 621,
-        "Y" : 365
+        "X" : 776,
+        "Y" : 456
       }, {
-        "X" : 621,
-        "Y" : 431
+        "X" : 776,
+        "Y" : 539
       }, {
-        "X" : 644,
-        "Y" : 431
+        "X" : 805,
+        "Y" : 539
       } ]
     } ]
   }, {
@@ -196,59 +196,59 @@
       "sourcePinID" : 24,
       "targetPinID" : 12,
       "points" : [ {
-        "X" : 644,
-        "Y" : 198
+        "X" : 805,
+        "Y" : 248
       }, {
-        "X" : 351,
-        "Y" : 198
+        "X" : 406,
+        "Y" : 248
       } ]
     }, {
       "sourcePinID" : 55,
       "targetPinID" : 12,
       "points" : [ {
-        "X" : 644,
-        "Y" : 447
+        "X" : 805,
+        "Y" : 559
       }, {
-        "X" : 602,
-        "Y" : 447
+        "X" : 753,
+        "Y" : 559
       }, {
-        "X" : 602,
-        "Y" : 198
+        "X" : 753,
+        "Y" : 248
       }, {
-        "X" : 351,
-        "Y" : 198
+        "X" : 406,
+        "Y" : 248
       } ]
     }, {
       "sourcePinID" : 62,
       "targetPinID" : 12,
       "points" : [ {
-        "X" : 644,
-        "Y" : 530
+        "X" : 805,
+        "Y" : 663
       }, {
-        "X" : 602,
-        "Y" : 530
+        "X" : 753,
+        "Y" : 663
       }, {
-        "X" : 602,
-        "Y" : 198
+        "X" : 753,
+        "Y" : 248
       }, {
-        "X" : 351,
-        "Y" : 198
+        "X" : 406,
+        "Y" : 248
       } ]
     }, {
       "sourcePinID" : 91,
       "targetPinID" : 12,
       "points" : [ {
-        "X" : 644,
-        "Y" : 329
+        "X" : 805,
+        "Y" : 411
       }, {
-        "X" : 602,
-        "Y" : 329
+        "X" : 753,
+        "Y" : 411
       }, {
-        "X" : 602,
-        "Y" : 198
+        "X" : 753,
+        "Y" : 248
       }, {
-        "X" : 351,
-        "Y" : 198
+        "X" : 406,
+        "Y" : 248
       } ]
     } ]
   }, {
@@ -260,127 +260,127 @@
       "sourcePinID" : 26,
       "targetPinID" : 9,
       "points" : [ {
-        "X" : 226,
-        "Y" : 351
+        "X" : 283,
+        "Y" : 439
       }, {
-        "X" : 198,
-        "Y" : 351
+        "X" : 248,
+        "Y" : 439
       }, {
-        "X" : 198,
-        "Y" : 288
+        "X" : 248,
+        "Y" : 360
       }, {
-        "X" : 390,
-        "Y" : 288
+        "X" : 488,
+        "Y" : 360
       }, {
-        "X" : 390,
-        "Y" : 102
+        "X" : 488,
+        "Y" : 128
       }, {
-        "X" : 350,
-        "Y" : 102
+        "X" : 405,
+        "Y" : 128
       } ]
     }, {
       "sourcePinID" : 27,
       "targetPinID" : 9,
       "points" : [ {
-        "X" : 226,
-        "Y" : 367
+        "X" : 283,
+        "Y" : 459
       }, {
-        "X" : 198,
-        "Y" : 367
+        "X" : 248,
+        "Y" : 459
       }, {
-        "X" : 198,
-        "Y" : 288
+        "X" : 248,
+        "Y" : 360
       }, {
-        "X" : 390,
-        "Y" : 288
+        "X" : 488,
+        "Y" : 360
       }, {
-        "X" : 390,
-        "Y" : 102
+        "X" : 488,
+        "Y" : 128
       }, {
-        "X" : 350,
-        "Y" : 102
+        "X" : 405,
+        "Y" : 128
       } ]
     }, {
       "sourcePinID" : 28,
       "targetPinID" : 9,
       "points" : [ {
-        "X" : 226,
-        "Y" : 383
+        "X" : 283,
+        "Y" : 479
       }, {
-        "X" : 198,
-        "Y" : 383
+        "X" : 248,
+        "Y" : 479
       }, {
-        "X" : 198,
-        "Y" : 288
+        "X" : 248,
+        "Y" : 360
       }, {
-        "X" : 390,
-        "Y" : 288
+        "X" : 488,
+        "Y" : 360
       }, {
-        "X" : 390,
-        "Y" : 102
+        "X" : 488,
+        "Y" : 128
       }, {
-        "X" : 350,
-        "Y" : 102
+        "X" : 405,
+        "Y" : 128
       } ]
     }, {
       "sourcePinID" : 22,
       "targetPinID" : 9,
       "points" : [ {
-        "X" : 644,
-        "Y" : 134
+        "X" : 805,
+        "Y" : 168
       }, {
-        "X" : 605,
-        "Y" : 134
+        "X" : 756,
+        "Y" : 168
       }, {
-        "X" : 605,
-        "Y" : 102
+        "X" : 756,
+        "Y" : 128
       }, {
-        "X" : 350,
-        "Y" : 102
+        "X" : 405,
+        "Y" : 128
       } ]
     }, {
       "sourcePinID" : 89,
       "targetPinID" : 9,
       "points" : [ {
-        "X" : 644,
-        "Y" : 249
+        "X" : 805,
+        "Y" : 311
       }, {
-        "X" : 518,
-        "Y" : 249
+        "X" : 648,
+        "Y" : 311
       }, {
-        "X" : 518,
-        "Y" : 224
+        "X" : 648,
+        "Y" : 280
       }, {
-        "X" : 390,
-        "Y" : 224
+        "X" : 488,
+        "Y" : 280
       }, {
-        "X" : 390,
-        "Y" : 102
+        "X" : 488,
+        "Y" : 128
       }, {
-        "X" : 350,
-        "Y" : 102
+        "X" : 405,
+        "Y" : 128
       } ]
     }, {
       "sourcePinID" : 107,
       "targetPinID" : 9,
       "points" : [ {
-        "X" : 644,
-        "Y" : 383
+        "X" : 805,
+        "Y" : 479
       }, {
-        "X" : 518,
-        "Y" : 383
+        "X" : 648,
+        "Y" : 479
       }, {
-        "X" : 518,
-        "Y" : 224
+        "X" : 648,
+        "Y" : 280
       }, {
-        "X" : 390,
-        "Y" : 224
+        "X" : 488,
+        "Y" : 280
       }, {
-        "X" : 390,
-        "Y" : 102
+        "X" : 488,
+        "Y" : 128
       }, {
-        "X" : 350,
-        "Y" : 102
+        "X" : 405,
+        "Y" : 128
       } ]
     } ]
   }, {
@@ -392,11 +392,11 @@
       "sourcePinID" : 50,
       "targetPinID" : 74,
       "points" : [ {
-        "X" : 784,
-        "Y" : 383
+        "X" : 949,
+        "Y" : 479
       }, {
-        "X" : 817,
-        "Y" : 383
+        "X" : 1021,
+        "Y" : 479
       } ]
     } ]
   }, {
@@ -408,11 +408,11 @@
       "sourcePinID" : 57,
       "targetPinID" : 71,
       "points" : [ {
-        "X" : 779,
-        "Y" : 498
+        "X" : 944,
+        "Y" : 623
       }, {
-        "X" : 778,
-        "Y" : 498
+        "X" : 973,
+        "Y" : 623
       } ]
     } ]
   }, {
@@ -424,17 +424,17 @@
       "sourcePinID" : 64,
       "targetPinID" : 72,
       "points" : [ {
-        "X" : 779,
-        "Y" : 582
+        "X" : 944,
+        "Y" : 728
       }, {
-        "X" : 877,
-        "Y" : 582
+        "X" : 1096,
+        "Y" : 728
       }, {
-        "X" : 877,
-        "Y" : 498
+        "X" : 1096,
+        "Y" : 623
       }, {
-        "X" : 872,
-        "Y" : 498
+        "X" : 1071,
+        "Y" : 623
       } ]
     } ]
   }, {
@@ -446,17 +446,17 @@
       "sourcePinID" : 54,
       "targetPinID" : 34,
       "points" : [ {
-        "X" : 644,
-        "Y" : 399
+        "X" : 805,
+        "Y" : 499
       }, {
-        "X" : 531,
-        "Y" : 399
+        "X" : 664,
+        "Y" : 499
       }, {
-        "X" : 531,
-        "Y" : 431
+        "X" : 664,
+        "Y" : 539
       }, {
-        "X" : 332,
-        "Y" : 431
+        "X" : 395,
+        "Y" : 539
       } ]
     } ]
   }, {
@@ -468,17 +468,17 @@
       "sourcePinID" : 61,
       "targetPinID" : 35,
       "points" : [ {
-        "X" : 644,
-        "Y" : 498
+        "X" : 805,
+        "Y" : 623
       }, {
-        "X" : 531,
-        "Y" : 498
+        "X" : 664,
+        "Y" : 623
       }, {
-        "X" : 531,
-        "Y" : 447
+        "X" : 664,
+        "Y" : 559
       }, {
-        "X" : 332,
-        "Y" : 447
+        "X" : 395,
+        "Y" : 559
       } ]
     } ]
   }, {
@@ -490,17 +490,17 @@
       "sourcePinID" : 68,
       "targetPinID" : 36,
       "points" : [ {
-        "X" : 644,
-        "Y" : 582
+        "X" : 805,
+        "Y" : 728
       }, {
-        "X" : 486,
-        "Y" : 582
+        "X" : 608,
+        "Y" : 728
       }, {
-        "X" : 486,
-        "Y" : 463
+        "X" : 608,
+        "Y" : 579
       }, {
-        "X" : 332,
-        "Y" : 463
+        "X" : 395,
+        "Y" : 579
       } ]
     } ]
   }, {
@@ -512,96 +512,96 @@
       "sourcePinID" : 19,
       "targetPinID" : 8,
       "points" : [ {
-        "X" : 757,
-        "Y" : 134
+        "X" : 922,
+        "Y" : 168
       }, {
-        "X" : 758,
-        "Y" : 134
+        "X" : 948,
+        "Y" : 168
       }, {
-        "X" : 758,
-        "Y" : 77
+        "X" : 948,
+        "Y" : 96
       }, {
-        "X" : 557,
-        "Y" : 77
+        "X" : 696,
+        "Y" : 96
       }, {
-        "X" : 557,
-        "Y" : 134
+        "X" : 696,
+        "Y" : 168
       }, {
-        "X" : 350,
-        "Y" : 134
+        "X" : 405,
+        "Y" : 168
       } ]
     }, {
       "sourcePinID" : 60,
       "targetPinID" : 8,
       "points" : [ {
-        "X" : 644,
-        "Y" : 514
+        "X" : 805,
+        "Y" : 643
       }, {
-        "X" : 557,
-        "Y" : 514
+        "X" : 696,
+        "Y" : 643
       }, {
-        "X" : 557,
-        "Y" : 134
+        "X" : 696,
+        "Y" : 168
       }, {
-        "X" : 554,
-        "Y" : 134
+        "X" : 693,
+        "Y" : 168
       }, {
-        "X" : 350,
-        "Y" : 134
+        "X" : 405,
+        "Y" : 168
       } ]
     }, {
       "sourcePinID" : 67,
       "targetPinID" : 8,
       "points" : [ {
-        "X" : 644,
-        "Y" : 598
+        "X" : 805,
+        "Y" : 748
       }, {
-        "X" : 557,
-        "Y" : 598
+        "X" : 696,
+        "Y" : 748
       }, {
-        "X" : 557,
-        "Y" : 134
+        "X" : 696,
+        "Y" : 168
       }, {
-        "X" : 350,
-        "Y" : 134
+        "X" : 405,
+        "Y" : 168
       } ]
     }, {
       "sourcePinID" : 86,
       "targetPinID" : 8,
       "points" : [ {
-        "X" : 757,
-        "Y" : 249
+        "X" : 922,
+        "Y" : 311
       }, {
-        "X" : 758,
-        "Y" : 249
+        "X" : 948,
+        "Y" : 311
       }, {
-        "X" : 758,
-        "Y" : 77
+        "X" : 948,
+        "Y" : 96
       }, {
-        "X" : 557,
-        "Y" : 77
+        "X" : 696,
+        "Y" : 96
       }, {
-        "X" : 557,
-        "Y" : 134
+        "X" : 696,
+        "Y" : 168
       }, {
-        "X" : 350,
-        "Y" : 134
+        "X" : 405,
+        "Y" : 168
       } ]
     }, {
       "sourcePinID" : 53,
       "targetPinID" : 8,
       "points" : [ {
-        "X" : 644,
-        "Y" : 415
+        "X" : 805,
+        "Y" : 519
       }, {
-        "X" : 557,
-        "Y" : 415
+        "X" : 696,
+        "Y" : 519
       }, {
-        "X" : 557,
-        "Y" : 134
+        "X" : 696,
+        "Y" : 168
       }, {
-        "X" : 350,
-        "Y" : 134
+        "X" : 405,
+        "Y" : 168
       } ]
     } ]
   }, {
@@ -613,17 +613,17 @@
       "sourcePinID" : 87,
       "targetPinID" : 33,
       "points" : [ {
-        "X" : 644,
-        "Y" : 281
+        "X" : 805,
+        "Y" : 351
       }, {
-        "X" : 493,
-        "Y" : 281
+        "X" : 616,
+        "Y" : 351
       }, {
-        "X" : 493,
-        "Y" : 415
+        "X" : 616,
+        "Y" : 519
       }, {
-        "X" : 332,
-        "Y" : 415
+        "X" : 395,
+        "Y" : 519
       } ]
     } ]
   }, {
@@ -635,17 +635,17 @@
       "sourcePinID" : 92,
       "targetPinID" : 32,
       "points" : [ {
-        "X" : 644,
-        "Y" : 265
+        "X" : 805,
+        "Y" : 331
       }, {
-        "X" : 474,
-        "Y" : 265
+        "X" : 593,
+        "Y" : 331
       }, {
-        "X" : 474,
-        "Y" : 399
+        "X" : 593,
+        "Y" : 499
       }, {
-        "X" : 332,
-        "Y" : 399
+        "X" : 395,
+        "Y" : 499
       } ]
     } ]
   }, {
@@ -657,17 +657,17 @@
       "sourcePinID" : 96,
       "targetPinID" : 2,
       "points" : [ {
-        "X" : 143,
-        "Y" : 95
+        "X" : 155,
+        "Y" : 119
       }, {
-        "X" : 154,
-        "Y" : 95
+        "X" : 193,
+        "Y" : 119
       }, {
-        "X" : 154,
-        "Y" : 134
+        "X" : 193,
+        "Y" : 168
       }, {
-        "X" : 202,
-        "Y" : 134
+        "X" : 253,
+        "Y" : 168
       } ]
     } ]
   }, {
@@ -679,11 +679,11 @@
       "sourcePinID" : 99,
       "targetPinID" : 3,
       "points" : [ {
-        "X" : 124,
-        "Y" : 146
+        "X" : 136,
+        "Y" : 183
       }, {
-        "X" : 202,
-        "Y" : 146
+        "X" : 253,
+        "Y" : 183
       } ]
     } ]
   }, {
@@ -695,17 +695,17 @@
       "sourcePinID" : 102,
       "targetPinID" : 4,
       "points" : [ {
-        "X" : 132,
-        "Y" : 198
+        "X" : 144,
+        "Y" : 248
       }, {
-        "X" : 154,
-        "Y" : 198
+        "X" : 193,
+        "Y" : 248
       }, {
-        "X" : 154,
-        "Y" : 166
+        "X" : 193,
+        "Y" : 208
       }, {
-        "X" : 202,
-        "Y" : 166
+        "X" : 253,
+        "Y" : 208
       } ]
     } ]
   } ],
@@ -715,13 +715,13 @@
     "name" : "PEPE-16",
     "numberOfBits" : 16,
     "moduleDelay" : 5,
-    "positionX" : 206,
-    "positionY" : 90,
+    "positionX" : 258,
+    "positionY" : 113,
     "simGuiVisibleInSimulation" : true,
-    "simGuiXRelative" : 15,
-    "simGuiYRelative" : 33,
-    "simGuiWidth" : 740,
-    "simGuiHeight" : 818,
+    "simGuiXRelative" : 19,
+    "simGuiYRelative" : 41,
+    "simGuiWidth" : 798,
+    "simGuiHeight" : 886,
     "clockPeriod" : 200,
     "startAutomatically" : false,
     "simulationMaster" : true,
@@ -750,7 +750,7 @@
       "pinConnectionID" : -1,
       "pinValueFixed" : "1"
     },
-    "programFilePathName" : "projeto.asm",
+    "programFilePathName" : "grupo76.asm",
     "nTabSpaces" : 4,
     "bus interface" : {
       "className" : "ModuleExtensionMasterBusReadWrite",
@@ -927,8 +927,8 @@
     "name" : "RAM",
     "numberOfBits" : 16,
     "moduleDelay" : 5,
-    "positionX" : 648,
-    "positionY" : 122,
+    "positionX" : 810,
+    "positionY" : 153,
     "simGuiVisibleInSimulation" : false,
     "addressable data" : {
       "className" : "ModuleExtensionMemory",
@@ -1022,8 +1022,8 @@
     "name" : "Descodificador",
     "numberOfBits" : 1,
     "moduleDelay" : 5,
-    "positionX" : 230,
-    "positionY" : 339,
+    "positionX" : 288,
+    "positionY" : 424,
     "nInputPinsArray" : [ {
       "className" : "InPin",
       "elementID" : 26,
@@ -1157,8 +1157,8 @@
     "name" : "AND",
     "numberOfBits" : 1,
     "moduleDelay" : 5,
-    "positionX" : 366,
-    "positionY" : 320,
+    "positionX" : 458,
+    "positionY" : 400,
     "nInputPinsArray" : [ {
       "className" : "InPin",
       "elementID" : 39,
@@ -1199,8 +1199,8 @@
     "name" : "POUT-1",
     "numberOfBits" : 16,
     "moduleDelay" : 5,
-    "positionX" : 648,
-    "positionY" : 371,
+    "positionX" : 810,
+    "positionY" : 464,
     "nOutputPinsArray" : [ {
       "className" : "TristateOutPin",
       "elementID" : 50,
@@ -1292,8 +1292,8 @@
     "name" : "POUT-2",
     "numberOfBits" : 8,
     "moduleDelay" : 5,
-    "positionX" : 648,
-    "positionY" : 486,
+    "positionX" : 810,
+    "positionY" : 608,
     "nOutputPinsArray" : [ {
       "className" : "TristateOutPin",
       "elementID" : 57,
@@ -1360,8 +1360,8 @@
     "name" : "PIN",
     "numberOfBits" : 8,
     "moduleDelay" : 5,
-    "positionX" : 648,
-    "positionY" : 570,
+    "positionX" : 810,
+    "positionY" : 713,
     "nInputPinsArray" : [ {
       "className" : "InPin",
       "elementID" : 64,
@@ -1429,13 +1429,13 @@
     "name" : "Teclado",
     "numberOfBits" : 4,
     "moduleDelay" : 5,
-    "positionX" : 782,
-    "positionY" : 486,
+    "positionX" : 978,
+    "positionY" : 608,
     "simGuiVisibleInSimulation" : true,
-    "simGuiXRelative" : 1184,
-    "simGuiYRelative" : 458,
-    "simGuiWidth" : 140,
-    "simGuiHeight" : 159,
+    "simGuiXRelative" : 1480,
+    "simGuiYRelative" : 573,
+    "simGuiWidth" : 166,
+    "simGuiHeight" : 187,
     "columns" : 4,
     "key numbers radix" : "Hexadecimal",
     "key color" : "Default",
@@ -1472,13 +1472,13 @@
     "name" : "Displays energia",
     "numberOfBits" : 12,
     "moduleDelay" : 5,
-    "positionX" : 821,
-    "positionY" : 371,
+    "positionX" : 1026,
+    "positionY" : 464,
     "simGuiVisibleInSimulation" : true,
-    "simGuiXRelative" : 129,
-    "simGuiYRelative" : 208,
-    "simGuiWidth" : 224,
-    "simGuiHeight" : 182,
+    "simGuiXRelative" : 161,
+    "simGuiYRelative" : 260,
+    "simGuiWidth" : 265,
+    "simGuiHeight" : 212,
     "nHexaDigits" : 3,
     "onColor" : "Red",
     "zColor" : "Black_White",
@@ -1500,24 +1500,24 @@
     "name" : "Media Center",
     "numberOfBits" : 16,
     "moduleDelay" : 5,
-    "positionX" : 648,
-    "positionY" : 237,
+    "positionX" : 810,
+    "positionY" : 296,
     "simGuiVisibleInSimulation" : true,
-    "simGuiXRelative" : 388,
-    "simGuiYRelative" : 126,
-    "simGuiWidth" : 819,
-    "simGuiHeight" : 410,
+    "simGuiXRelative" : 485,
+    "simGuiYRelative" : 158,
+    "simGuiWidth" : 1024,
+    "simGuiHeight" : 512,
     "columnAddressNBits" : 6,
     "lineAddressNBits" : 5,
     "windowScreenWidthPixels" : 1024,
     "windowScreenHeightixels" : 512,
     "defaultPenColor" : 51063,
-    "image paths" : [ "..\\Labs\\lab5\\espaco.jpg" ],
+    "image paths" : [ "espaco.jpg" ],
     "sounds/videos settings" : [ {
       "filePathName" : "som_meteoro_descer.wav",
       "relative sound volume" : 1.0,
       "relative start time" : 0.0,
-      "relative stop time" : 1.0,
+      "relative stop time" : 0.4,
       "playAsClip" : false
     } ],
     "addressable data" : {
@@ -1635,13 +1635,13 @@
     "name" : "Relógio meteoros",
     "numberOfBits" : 1,
     "moduleDelay" : 5,
-    "positionX" : 26,
-    "positionY" : 83,
+    "positionX" : 33,
+    "positionY" : 104,
     "simGuiVisibleInSimulation" : true,
-    "simGuiXRelative" : 620,
-    "simGuiYRelative" : 605,
-    "simGuiWidth" : 326,
-    "simGuiHeight" : 260,
+    "simGuiXRelative" : 775,
+    "simGuiYRelative" : 756,
+    "simGuiWidth" : 346,
+    "simGuiHeight" : 236,
     "clockPeriod" : 400,
     "startAutomatically" : true,
     "simulationMaster" : false,
@@ -1662,13 +1662,13 @@
     "name" : "Relógio missil",
     "numberOfBits" : 1,
     "moduleDelay" : 5,
-    "positionX" : 26,
-    "positionY" : 134,
+    "positionX" : 33,
+    "positionY" : 168,
     "simGuiVisibleInSimulation" : true,
-    "simGuiXRelative" : 311,
-    "simGuiYRelative" : 413,
-    "simGuiWidth" : 326,
-    "simGuiHeight" : 260,
+    "simGuiXRelative" : 389,
+    "simGuiYRelative" : 516,
+    "simGuiWidth" : 346,
+    "simGuiHeight" : 236,
     "clockPeriod" : 200,
     "startAutomatically" : true,
     "simulationMaster" : false,
@@ -1689,13 +1689,13 @@
     "name" : "Relógio energia",
     "numberOfBits" : 1,
     "moduleDelay" : 5,
-    "positionX" : 26,
-    "positionY" : 186,
+    "positionX" : 33,
+    "positionY" : 233,
     "simGuiVisibleInSimulation" : true,
-    "simGuiXRelative" : 1194,
-    "simGuiYRelative" : 606,
-    "simGuiWidth" : 326,
-    "simGuiHeight" : 260,
+    "simGuiXRelative" : 1493,
+    "simGuiYRelative" : 758,
+    "simGuiWidth" : 346,
+    "simGuiHeight" : 236,
     "clockPeriod" : 3000,
     "startAutomatically" : true,
     "simulationMaster" : false,
